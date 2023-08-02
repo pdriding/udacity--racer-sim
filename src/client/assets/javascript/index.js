@@ -145,6 +145,8 @@ function handleSelectPodRacer(target) {
   target.classList.add("selected");
 
   // TODO - save the selected racer to the store
+  store.race_id = target.id;
+  console.log(store);
 }
 
 function handleSelectTrack(target) {
@@ -160,6 +162,7 @@ function handleSelectTrack(target) {
   target.classList.add("selected");
 
   // TODO - save the selected track id to the store
+  store.track_id = target.id;
 }
 
 function handleAccelerate() {
@@ -233,6 +236,7 @@ function renderCountdown(count) {
 }
 
 function renderRaceStartView(track, racers) {
+  console.log(track);
   return `
 		<header>
 			<h1>Race: ${track.name}</h1>
@@ -303,74 +307,54 @@ function renderAt(element, html) {
 
 // API CALLS ------------------------------------------------
 
-const SERVER = "http://localhost:3000";
+const SERVER = "http://localhost:3001";
+
+function defaultFetchOpts() {
+  return {
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": SERVER,
+    },
+  };
+}
+
+// TODO - Make a fetch call (with error handling!) to each of the following API endpoints
 
 function getTracks() {
+  // GET request to `${SERVER}/api/tracks`
   return fetch(`${SERVER}/api/tracks`)
     .then((res) => {
       const data = res.json();
-      console.log(data);
       return data;
     })
     .catch((error) => console.log("Problem with getTracks request::", error));
 }
 
-// const SERVER = "http://localhost:3000";
+function getRacers() {
+  // GET request to `${SERVER}/api/cars`
+  return fetch(`${SERVER}/api/cars`)
+    .then((res) => {
+      const data = res.json();
+      return data;
+    })
+    .catch((error) => console.log("Problem with getTracks request::", error));
+}
 
-// function defaultFetchOpts() {
-//   return {
-//     mode: "cors",
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Access-Control-Allow-Origin": SERVER,
-//     },
-//   };
-// }
+function createRace(player_id, track_id) {
+  player_id = parseInt(player_id);
+  track_id = parseInt(track_id);
+  const body = { player_id, track_id };
 
-// TODO - Make a fetch call (with error handling!) to each of the following API endpoints
-
-// function getTracks() {
-//   // GET request to `${SERVER}/api/tracks`
-//   const url = `http://localhost:3000/api/tracks`;
-//   console.log(url);
-//   fetch(url)
-//     .then((response) => {
-//       // console.log(response.json());
-//       // if (!response.ok) {
-//       //   throw new Error("Network response was not ok.");
-//       // }
-//       return response.json();
-//     })
-//     .then((data) => {
-//       // Handle the response data here.
-//       console.log(data); // For example, you can log the data to the console.
-//     })
-//     .catch((error) => {
-//       // Handle any error that occurred during the fetch.
-//       console.error("Error:", error);
-//     });
-// }
-
-// const SERVER = "http://localhost:3000";
-
-// function getRacers() {
-//   // GET request to `${SERVER}/api/cars`
-// }
-
-// function createRace(player_id, track_id) {
-//   player_id = parseInt(player_id);
-//   track_id = parseInt(track_id);
-//   const body = { player_id, track_id };
-
-//   return fetch(`${SERVER}/api/races`, {
-//     method: "POST",
-//     ...defaultFetchOpts(),
-//     dataType: "jsonp",
-//     body: JSON.stringify(body),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.log("Problem with createRace request::", err));
-// }
+  return fetch(`${SERVER}/api/races`, {
+    method: "POST",
+    ...defaultFetchOpts(),
+    dataType: "jsonp",
+    body: JSON.stringify(body),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log("Problem with createRace request::", err));
+}
 
 function getRace(id) {
   // GET request to `${SERVER}/api/races/${id}`

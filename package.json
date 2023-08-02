@@ -13,5 +13,7 @@
     "express": "^4.18.2",
     "node-fetch": "^2.6.12",
     "path": "^0.12.7"
-  }
+  },
+  "repository": "https://github.com/pdriding/udacity--racer-sim.git",
+  "author": "pdriding <peterdriding@gmail.com>"
 }
